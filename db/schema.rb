@@ -24,6 +24,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_115341) do
     t.string "send_period"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["external_id"], name: "index_users_on_external_id", unique: true
   end
 
 end
