@@ -51,7 +51,8 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
         [
           { text: 'Раз в день', callback_data: 'per_day' },
           { text: 'Раз в неделю', callback_data: 'per_week' },
-          { text: 'Раз в месяц', callback_data: 'per_month' }
+          { text: 'Раз в месяц', callback_data: 'per_month' },
+          { text: 'Прекратить рассылку', callback_data: 'stop_send' }
         ]
       ]
     }
@@ -61,19 +62,21 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
     case data
     when 'get_result'
       respond_with :message, text: 'Подождите началась магия 🧙‍♂🪄'
-      respond_with :message, text: WhalesPoolDataFetcher.html_into_massive(@current_user.ton_address).to_s
+      respond_with :message, text: PrettyPrintResults.print_result(WhalesPoolDataFetcher.html_into_massive(@current_user.ton_address))
     when 'settings'
       set_settings
     when 'per_day'
-      respond_with :message, text: 'Выбрана рассылка раз в день в 14-00'
-      # @current_user.update(send_period: '0 14 * * *')
-      @current_user.update(send_period: '*/2 * * * *')
+      respond_with :message, text: 'Выбрана рассылка раз в день в 14-00 🕑'
+      @current_user.update(send_period: '0 14 * * *')
     when 'per_week'
-      respond_with :message, text: 'Выбрана рассылка раз в неделю в пн в 14-00'
+      respond_with :message, text: 'Выбрана рассылка раз в неделю в пн в 14-00 🕑'
       @current_user.update(send_period: '0 14 * * mon')
     when 'per_month'
-      respond_with :message, text: 'Выбрана рассылка раз в месяц первого числа месяца в 14-00'
+      respond_with :message, text: 'Выбрана рассылка раз в месяц первого числа месяца в 14-00 🕑'
       @current_user.update(send_period: '0 14 1 * *')
+    when 'stop_send'
+      respond_with :message, text: 'Рассылка отключена ❌'
+      @current_user.update(send_period: '')
     else
       respond_with :message, text: 'Куда полез??'
     end
