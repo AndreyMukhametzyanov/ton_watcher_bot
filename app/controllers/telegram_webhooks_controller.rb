@@ -61,7 +61,7 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
     case data
     when 'get_result'
       respond_with :message, text: 'Подождите началась магия 🧙‍♂🪄'
-      respond_with :message, text: Parser.html_into_massive(@current_user.ton_address).to_s
+      respond_with :message, text: WhalesPoolDataFetcher.html_into_massive(@current_user.ton_address).to_s
     when 'settings'
       set_settings
     when 'per_day'

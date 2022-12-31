@@ -10,7 +10,7 @@ class AddSendDelayWorker
     user = User.find_by(id: args)
 
     TelegramWebhooksController.send_message(
-      text: print_result(Parser.html_into_massive(user.ton_address)),
+      text: print_result(WhalesPoolDataFetcher.html_into_massive(user.ton_address)),
       to: user.external_id
     )
 
