@@ -1,0 +1,74 @@
+require:
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 3.0.1
+  NewCops: enable
+  Exclude:
+    - db/**/*
+    - bin/*
+    - vendor/bundle/**/*
+    - config/initializers/*
+
+Metrics/MethodLength:
+  Max: 30
+
+Style/Copyright:
+  Enabled: false
+
+Style/MethodCallWithArgsParentheses:
+  Enabled: false
+
+Style/StringHashKeys:
+  Enabled: false
+
+Style/MissingElse:
+  Enabled: false
+
+Style/DocumentationMethod:
+  Enabled: false
+
+Style/AsciiComments:
+  Enabled: false
+
+Metrics/BlockLength:
+  Max: 60
+  Exclude:
+    - spec/**/*
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 120
+
+Bundler/GemComment:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 60
+
+Layout/EndOfLine:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Max: 100
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 12
+
+RSpec/NestedGroups:
+  Max: 10
+
+RSpec/ExampleLength:
+  Max: 15
+
+Rails/FilePath:
+  Enabled: false
+
+Metrics/ClassLength:
+  Max: 150

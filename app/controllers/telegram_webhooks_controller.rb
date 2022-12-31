@@ -1,19 +1,29 @@
+# frozen_string_literal: true
+
 class TelegramWebhooksController < Telegram::Bot::UpdatesController
   before_action :find_user
 
   include Telegram::Bot::UpdatesController::MessageContext
-  #EQCi-oUQtQ4A-R625OCFQQvJj-8Ykh6j3rkwYjaL_-08hisv
+  extend Telegram::Bot::ConfigMethods
+  # EQCi-oUQtQ4A-R625OCFQQvJj-8Ykh6j3rkwYjaL_-08hisv
   use_session!
 
-  def start!(*)
+  def self.send_message(text:, to:)
+    new(bot, { from: { 'id' => to }, chat: { 'id' => to } }).process(:send_message, text)
+  end
 
+  def send_message(text)
+    respond_with :message, text: text
+  end
+
+  def start!(*)
     return if from['is_bot']
 
     if @current_user
       respond_with :message, text: 'Привет!'
       instructions
     else
-      respond_with :message, text: "Для регистрации введите адресс Ton кошелька"
+      respond_with :message, text: 'Для регистрации введите адресс Ton кошелька'
       save_context :add_ton_address
     end
   end
@@ -41,7 +51,8 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
         [
           { text: 'Раз в день', callback_data: 'per_day' },
           { text: 'Раз в неделю', callback_data: 'per_week' },
-          { text: 'Раз в месяц', callback_data: 'per_month' }
+          { text: 'Раз в месяц', callback_data: 'per_month' },
+          { text: 'Прекратить рассылку', callback_data: 'stop_send' }
         ]
       ]
     }
@@ -50,34 +61,28 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   def callback_query(data)
     case data
     when 'get_result'
-
-      respond_with :message, text: "Подождите началась магия 🧙‍♂🪄"
-      respond_with :message, text: "#{print_result(Parser.html_into_massive(@current_user.ton_address))}"
+      respond_with :message, text: 'Подождите началась магия 🧙‍♂🪄'
+      respond_with :message, text: PrettyPrintResults.print_result(WhalesPoolDataFetcher.html_into_massive(@current_user.ton_address))
     when 'settings'
       set_settings
     when 'per_day'
-      respond_with :message, text: "Выбрана рассылка раз в день"
-      @current_user.update(send_period: 'day')
+      respond_with :message, text: 'Выбрана рассылка раз в день в 14-00 🕑'
+      @current_user.update(send_period: '0 14 * * *')
     when 'per_week'
-      respond_with :message, text: "Выбрана рассылка раз в неделю"
-      @current_user.update(send_period: 'week')
+      respond_with :message, text: 'Выбрана рассылка раз в неделю в пн в 14-00 🕑'
+      @current_user.update(send_period: '0 14 * * mon')
     when 'per_month'
-      respond_with :message, text: "Выбрана рассылка раз в месяц"
-      @current_user.update(send_period: 'month')
+      respond_with :message, text: 'Выбрана рассылка раз в месяц первого числа месяца в 14-00 🕑'
+      @current_user.update(send_period: '0 14 1 * *')
+    when 'stop_send'
+      respond_with :message, text: 'Рассылка отключена ❌'
+      @current_user.update(send_period: '')
     else
-      respond_with :message, text: "Куда полез??"
+      respond_with :message, text: 'Куда полез??'
     end
   end
 
   private
-
-  def print_result(result)
-    table = ''
-    result.each do |el|
-      table += "Name: #{el["Name"]}\nBalance: #{el["Balance"]}💎\nPending Deposit: #{el["Pending Deposit"]}💎\nPending Withdraw: #{el["Pending Withdraw"]}💎\nWithdraw: #{el["Withdraw"]}💎\n*****************************\n"
-    end
-    table
-  end
 
   def session_key
     "#{bot.username}:#{chat['id']}:#{from['id']}" if chat && from

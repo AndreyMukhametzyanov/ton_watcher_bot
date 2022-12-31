@@ -1,24 +1,63 @@
-# README
+# Телеграмм бот для проверки стекинга криптовалюты TON
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Устали каждый раз проверять баланс кошелька? 
 
-Things you may want to cover:
+Тогда этот бот для Вас.
 
-* Ruby version
+### Бот позволяет:
 
-* System dependencies
+- Выбрать период отправки сообщений о балансе вашего кошелька: раз в день, неделю или месяц
+- Осуществить разовую проверку
 
-* Configuration
+### Запуск приложения
 
-* Database creation
+<details>
+       <summary> Запуск приложения в окружении development (спойлер) </summary>
 
-* Database initialization
+> Подготовительная часть !
 
-* How to run the test suite
+- Создайте своего бота в телеграмм, следуя инструциям бота @BotFather
+- Скопируйте API TOKEN вашего бота и в ставьте в фаил /config/secrets_sample.yml, а также укажите имя вшего бота.
+  Например "watcher_tons_bot"
+- Переименуйте фаил secrets_sample.yml в secrets.yml
 
-* Services (job queues, cache servers, search engines, etc.)
+***ВАЖНО!***
+> Если вы используете WINDOWS + WSL убедитесь что вы запустили базу данных Postgresql !
 
-* Deployment instructions
+- Установить зависимости
 
-* ...
+```shell
+bundle install
+```
+
+- Создать БД
+
+```shell
+rails db:create
+```
+
+- Запустить миграции
+
+```shell
+rails db:migrate
+```
+
+- Установить гем 'foreman' https://github.com/ddollar/foreman
+
+```shell
+gem install foreman
+```
+
+- Запустить 'foreman'
+
+```shell
+foreman start
+```
+
+Переходите в телеграмм в поиске ищете по имени вашего бота и отправляем сообщение
+
+```shell
+/start
+```
+
+</details>

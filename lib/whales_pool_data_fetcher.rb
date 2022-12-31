@@ -1,11 +1,18 @@
+# frozen_string_literal: true
+
 require 'nokogiri'
 require 'open-uri'
 require 'watir'
 
-class Parser
+class WhalesPoolDataFetcher
   def self.html_into_massive(address)
     browser = Watir::Browser.new :chrome, headless: true
-    browser.goto "https://tonwhales.com/staking/address/#{address}"
+
+    begin
+      browser.goto "https://tonwhales.com/staking/address/#{address}"
+    rescue
+      logger.info "Error raise"
+    end
 
     doc = Nokogiri::HTML(browser.html, nil, 'UTF-8')
 
