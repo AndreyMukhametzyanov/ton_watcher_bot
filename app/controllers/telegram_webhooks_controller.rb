@@ -5,7 +5,7 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
 
   include Telegram::Bot::UpdatesController::MessageContext
   extend Telegram::Bot::ConfigMethods
-  # EQCi-oUQtQ4A-R625OCFQQvJj-8Ykh6j3rkwYjaL_-08hisv
+
   use_session!
 
   def self.send_message(text:, to:)
