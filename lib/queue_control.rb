@@ -1,14 +1,9 @@
 class QueueControl
   def self.lock!(queue,delay)
-    Sidekiq.redis do |conn|
-      conn.set('queue',queue)
-      conn.set('delay',delay)
-    end
+    Sidekiq.redis { |conn| conn.set(queue,delay) }
   end
 
   def self.unlock!(queue)
-    redis = Redis.new
-    redis.set('queue',queue)
-    redis.set('delay','0')
+    Sidekiq.redis { |conn| conn.set(queue, 0) }
   end
 end
