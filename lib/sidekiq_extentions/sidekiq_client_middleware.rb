@@ -4,7 +4,7 @@ class SidekiqClientMiddleware
       Rails.logger.info "SidekiqClientMiddleware started"
       sleep (Sidekiq.redis { |conn| conn.get(queue) }).to_i
       Rails.logger.info "SidekiqClientMiddleware after sleep"
-      yield
     end
+    yield
   end
 end
