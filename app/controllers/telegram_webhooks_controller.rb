@@ -39,6 +39,7 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
       inline_keyboard: [
         [
           { text: 'Узнать баланс', callback_data: 'get_result' },
+          { text: 'Проверка очереди', callback_data: 'check' },
           { text: 'Настройки отправки', callback_data: 'settings' }
         ]
       ]
@@ -63,11 +64,13 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
     when 'get_result'
       respond_with :message, text: 'Подождите началась магия 🧙‍♂🪄'
       respond_with :message, text: PrettyPrintResults.print_result(WhalesPoolDataFetcher.html_into_massive(@current_user.ton_address))
+    when 'check'
+      MyWorker.perform
     when 'settings'
       set_settings
     when 'per_day'
       respond_with :message, text: 'Выбрана рассылка раз в день в 14-00 🕑'
-      @current_user.update(send_period: '0 14 * * *')
+      @current_user.update(send_period: '*/5 * * * *')
     when 'per_week'
       respond_with :message, text: 'Выбрана рассылка раз в неделю в пн в 14-00 🕑'
       @current_user.update(send_period: '0 14 * * mon')

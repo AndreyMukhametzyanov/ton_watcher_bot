@@ -1,1 +1,4 @@
 :dynamic: true
+:queues:
+  - delay
+  - my_queue_1
