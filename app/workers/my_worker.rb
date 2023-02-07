@@ -5,6 +5,6 @@ class MyWorker
     def perform(args)
     logger.info "MyJob started"
     sleep(args)
-    logger.info "MyJob ended after 10 sec"
+    logger.info "MyJob ended after #{args} sec"
   end
 end
